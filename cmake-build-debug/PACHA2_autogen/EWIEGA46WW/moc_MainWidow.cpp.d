@@ -1,5 +1,5 @@
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/PACHA2_autogen/EWIEGA46WW/moc_MainWidow.cpp: /home/qraim/CLionProjects/PACHA2/MainWidow.h \
-  /home/qraim/CLionProjects/PACHA2/cmake-build-debug/PACHA2_autogen/moc_predefs.h \
+/home/qraim/CLionProjects/PACHA/cmake-build-debug/PACHA2_autogen/EWIEGA46WW/moc_MainWidow.cpp: /home/qraim/CLionProjects/PACHA/MainWidow.h \
+  /home/qraim/CLionProjects/PACHA/cmake-build-debug/PACHA2_autogen/moc_predefs.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm/errno.h \
@@ -98,6 +98,7 @@
   /usr/include/c++/12.2.1/bits/hash_bytes.h \
   /usr/include/c++/12.2.1/bits/invoke.h \
   /usr/include/c++/12.2.1/bits/ios_base.h \
+  /usr/include/c++/12.2.1/bits/istream.tcc \
   /usr/include/c++/12.2.1/bits/iterator_concepts.h \
   /usr/include/c++/12.2.1/bits/list.tcc \
   /usr/include/c++/12.2.1/bits/locale_classes.h \
@@ -129,6 +130,7 @@
   /usr/include/c++/12.2.1/bits/shared_ptr.h \
   /usr/include/c++/12.2.1/bits/shared_ptr_atomic.h \
   /usr/include/c++/12.2.1/bits/shared_ptr_base.h \
+  /usr/include/c++/12.2.1/bits/specfun.h \
   /usr/include/c++/12.2.1/bits/std_abs.h \
   /usr/include/c++/12.2.1/bits/std_function.h \
   /usr/include/c++/12.2.1/bits/std_mutex.h \
@@ -167,6 +169,7 @@
   /usr/include/c++/12.2.1/cerrno \
   /usr/include/c++/12.2.1/climits \
   /usr/include/c++/12.2.1/clocale \
+  /usr/include/c++/12.2.1/cmath \
   /usr/include/c++/12.2.1/compare \
   /usr/include/c++/12.2.1/concepts \
   /usr/include/c++/12.2.1/cstddef \
@@ -188,6 +191,8 @@
   /usr/include/c++/12.2.1/initializer_list \
   /usr/include/c++/12.2.1/ios \
   /usr/include/c++/12.2.1/iosfwd \
+  /usr/include/c++/12.2.1/iostream \
+  /usr/include/c++/12.2.1/istream \
   /usr/include/c++/12.2.1/iterator \
   /usr/include/c++/12.2.1/limits \
   /usr/include/c++/12.2.1/list \
@@ -206,6 +211,18 @@
   /usr/include/c++/12.2.1/streambuf \
   /usr/include/c++/12.2.1/string \
   /usr/include/c++/12.2.1/string_view \
+  /usr/include/c++/12.2.1/tr1/bessel_function.tcc \
+  /usr/include/c++/12.2.1/tr1/beta_function.tcc \
+  /usr/include/c++/12.2.1/tr1/ell_integral.tcc \
+  /usr/include/c++/12.2.1/tr1/exp_integral.tcc \
+  /usr/include/c++/12.2.1/tr1/gamma.tcc \
+  /usr/include/c++/12.2.1/tr1/hypergeometric.tcc \
+  /usr/include/c++/12.2.1/tr1/legendre_function.tcc \
+  /usr/include/c++/12.2.1/tr1/modified_bessel_func.tcc \
+  /usr/include/c++/12.2.1/tr1/poly_hermite.tcc \
+  /usr/include/c++/12.2.1/tr1/poly_laguerre.tcc \
+  /usr/include/c++/12.2.1/tr1/riemann_zeta.tcc \
+  /usr/include/c++/12.2.1/tr1/special_function_util.h \
   /usr/include/c++/12.2.1/tuple \
   /usr/include/c++/12.2.1/type_traits \
   /usr/include/c++/12.2.1/typeinfo \
@@ -299,7 +316,9 @@
   /usr/include/qt/QtCore/qvarlengtharray.h \
   /usr/include/qt/QtCore/qvector.h \
   /usr/include/qt/QtCore/qversiontagging.h \
+  /usr/include/qt/QtGui/QIcon \
   /usr/include/qt/QtGui/QKeyEvent \
+  /usr/include/qt/QtGui/QPixmap \
   /usr/include/qt/QtGui/qbrush.h \
   /usr/include/qt/QtGui/qcolor.h \
   /usr/include/qt/QtGui/qcursor.h \

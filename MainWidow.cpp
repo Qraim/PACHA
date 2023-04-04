@@ -1,8 +1,5 @@
 #include "MainWidow.h"
-#include <map>
-#include <cmath>
-#include <iostream>
-#include <QShortcut>
+
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", this) {
     setFixedSize(500, 310);
@@ -13,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     vitesse.setFixedWidth(60);
     longueur.setFixedWidth(60);
     denivele.setFixedWidth(60);
-    resultLabel.setFixedWidth(20);
+    resultLabel.setFixedWidth(100);
     readOnlyLine.setFixedWidth(400);
     V.setFixedWidth(400);
     switchButton.setFixedWidth(80);
@@ -70,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     V.setFixedWidth(400);
     gridLayout->addWidget(&V, 9, 0, 1 ,4);
 
-
     setLayout(gridLayout);
 
     button.setEnabled(false);
@@ -95,12 +91,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     connect(&vitesse, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
     connect(&longueur, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
     connect(&denivele, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
-    // Connect the switch button
     connect(&switchButton, &QPushButton::clicked, this, &MainWindow::onSwitchButtonClicked);
 
     updateSecondComboBox(comboBox1.currentIndex());
     updateButtonState();
-
 }
 
 void MainWindow::onSwitchButtonClicked() {
@@ -159,25 +153,28 @@ float MainWindow::calcullongueurdeniv(){
     float deniveles = denivele.text().toFloat();
     float longueurs = longueur.text().toFloat();
 
-    float vitesses = (debits/3600) / ((pow((deniveles/2000),2))*M_PI);
-    float diametre = k*pow(debits,a)*pow(deniveles,b)*longueurs;
+    float vitesses = (debits/3600) / ((std::pow((deniveles/2000),2))*M_PI);
+    float diametre = k*std::pow(debits,a)*std::pow(deniveles,b)*longueurs;
 
-    V.setVisible(true);
-
-    std::string str="";
-    if(vitesses > 2){
-        V.setStyleSheet("color: red;  background-color: white");
-        str = "La vitesse est trop élevé ( " + std::to_string(vitesses) + " m/s)";
-    } else {
-        str = "La vitesse sera de " + std::to_string(vitesses) + " m/s";
-    }
-
-    V.setText(QString::fromStdString(str));
+    setvitesse(vitesses);
 
     Gettuyau(diametre);
 
-    return diametre;
+    return roundf(diametre * 100) / 100;
 
+}
+
+void MainWindow::setvitesse(int vitesse){
+    V.setVisible(true);
+    std::string str="";
+    if(vitesse > 2){
+        V.setStyleSheet("color: red;  background-color: white");
+        str = "La vitesse est trop élevé ( " + std::to_string(vitesse) + " m/s)";
+    } else {
+        V.setStyleSheet("");
+        str = "La vitesse sera de " + std::to_string(vitesse) + " m/s";
+    }
+    V.setText(QString::fromStdString(str));
 }
 
 float MainWindow::calculdebitvitesse(){
@@ -185,11 +182,11 @@ float MainWindow::calculdebitvitesse(){
     int debits = debit.text().toInt();
     int vitesses = vitesse.text().toInt(); // Récupération des variables
 
-    float diametre = sqrt((4*debits)/(M_PI*vitesses))*1000; // formule pour le calcul du diametre
+    float diametre = std::sqrt((4*debits)/(M_PI*vitesses))*1000; // formule pour le calcul du diametre
 
     Gettuyau(diametre);
 
-    return diametre;
+    return roundf(diametre * 100) / 100; // Pour être sur deux décimales
 
 }
 
@@ -312,7 +309,7 @@ void MainWindow::updateButtonState() {
     bool longueurHasText = !longueur.text().isEmpty();
     bool deniveleHasText = !denivele.text().isEmpty();
 
-    // Check which mode is active and enable the button accordingly
+    // Verifier quel mode est actif
     if (debit.isVisible() && vitesse.isVisible()) {
         button.setEnabled(debitHasText && vitesseHasText);
     } else {
@@ -343,6 +340,7 @@ void MainWindow::onReturnPressed() {
     }
 }
 
+
 void MainWindow::Gettuyau(float diametre) {
     std::pair<int, float> closestDuo;
     float minValue = std::numeric_limits<float>::max();
@@ -360,26 +358,40 @@ void MainWindow::Gettuyau(float diametre) {
     // Maintenant, closestDuo contient le duo le plus proche et supérieur au diamètre
     std::string str = "";
     if(closestDuo.first==0 && closestDuo.second==0){
-        str = "calcul invalide, pas de tuyau capable de supporter";
+        str = "Calcul Invalide";
     } else {
         str = "Il faut un tuyau de " + comboBox1.currentText().toStdString() + " en " + comboBox2.currentText().toStdString() + " bar, de " + std::to_string(closestDuo.first) + "mm";
     }
     readOnlyLine.setText(QString::fromStdString(str));
 }
 
+
+
+
 void MainWindow::keyPressEvent(QKeyEvent *event) {
+
     if (event->key() == Qt::Key_Control) {
         switchButton.click();
     }
-        // Gérer la combinaison de touches Shift + Up && Shift + Down
-    else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Up) {
+        // Gérer la combinaison de touches Shift + Up && Shift + Down ou U
+    else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Up || event->key() == Qt::Key_Up) {
         focusPreviousInput();
-    } else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Down) {
+    } else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Down || event->key() == Qt::Key_Down) {
         focusNextInput();
+    } else if (event->modifiers() & Qt::Key_Enter) {
+        if(button.isEnabled()){
+            float result = calculer();
+            resultLabel.setText(QString::number(result)); // Affichage du résultat
+            return;
+        }
     } else {
         QWidget::keyPressEvent(event);
     }
 }
+
+
+
+
 
 void MainWindow::focusPreviousInput() {
 

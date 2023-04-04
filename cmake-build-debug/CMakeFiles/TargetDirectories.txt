@@ -1,5 +1,4 @@
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/CMakeFiles/PACHA2.dir
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/CMakeFiles/PACHA2_autogen_timestamp_deps.dir
-/home/qraim/CLionProjects/PACHA2/cmake-build-debug/CMakeFiles/PACHA2_autogen.dir
+/home/qraim/CLionProjects/PACHA/cmake-build-debug/CMakeFiles/PACHA2.dir
+/home/qraim/CLionProjects/PACHA/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/qraim/CLionProjects/PACHA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/qraim/CLionProjects/PACHA/cmake-build-debug/CMakeFiles/PACHA2_autogen.dir
