@@ -169,21 +169,6 @@ float MainWindow::calcullongueurdeniv(){
 
 }
 
-void MainWindow::setvitesse(int vitesse){
-    // met le champ en visible
-    V.setVisible(true);
-    std::string str="";
-    // si la vitesse est > 2 on écris on rouge
-    if(vitesse > 2){
-        V.setStyleSheet("color: red;  background-color: white");
-        str = "La vitesse est trop élevé ( " + std::to_string(vitesse) + " m/s)";
-    } else {
-        V.setStyleSheet("");
-        str = "La vitesse sera de " + std::to_string(vitesse) + " m/s";
-    }
-    V.setText(QString::fromStdString(str));
-}
-
 float MainWindow::calculdebitvitesse(){
 
     int debits = debit.text().toInt();
@@ -305,49 +290,6 @@ std::map<float, float> MainWindow::gettableau() { // Générateur du tableau en 
     return tableau;
 }
 
-void MainWindow::onButtonClicked() {
-    float result = calculer();
-    resultLabel.setText(QString::number(result)); // Affichage du résultat
-}
-
-void MainWindow::updateButtonState() {
-    bool debitHasText = !debit.text().isEmpty();
-    bool vitesseHasText = !vitesse.text().isEmpty();
-    bool longueurHasText = !longueur.text().isEmpty();
-    bool deniveleHasText = !denivele.text().isEmpty();
-
-    // Verifier quel mode est actif et suivant les champs rempli, on l'active ou non
-    if (debit.isVisible() && vitesse.isVisible()) {
-        Calcul.setEnabled(debitHasText && vitesseHasText);
-    } else {
-        Calcul.setEnabled(longueurHasText && deniveleHasText && debitHasText);
-    }
-}
-
-
-void MainWindow::onReturnPressed() {
-    if (Calcul.isEnabled()) {
-        float result = calculer();
-        resultLabel.setText(QString::number(result)); // Affichage du résultat
-        return;
-    }
-
-    bool isVisible = longueur.isVisible();
-
-    if(debit.hasFocus() && !isVisible){
-        vitesse.setFocus();
-        return;
-    } else if (debit.hasFocus() && isVisible){
-        longueur.setFocus();
-        return;
-    }
-
-    if (longueur.hasFocus()) {
-        denivele.setFocus();
-    }
-}
-
-
 void MainWindow::Gettuyau(float diametre) {
     std::pair<int, float> closestDuo;
     float minValue = std::numeric_limits<float>::max();
@@ -397,7 +339,47 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     }
 }
 
+void MainWindow::onButtonClicked() {
+    float result = calculer();
+    resultLabel.setText(QString::number(result)); // Affichage du résultat
+}
 
+void MainWindow::updateButtonState() {
+    bool debitHasText = !debit.text().isEmpty();
+    bool vitesseHasText = !vitesse.text().isEmpty();
+    bool longueurHasText = !longueur.text().isEmpty();
+    bool deniveleHasText = !denivele.text().isEmpty();
+
+    // Verifier quel mode est actif et suivant les champs rempli, on l'active ou non
+    if (debit.isVisible() && vitesse.isVisible()) {
+        Calcul.setEnabled(debitHasText && vitesseHasText);
+    } else {
+        Calcul.setEnabled(longueurHasText && deniveleHasText && debitHasText);
+    }
+}
+
+
+void MainWindow::onReturnPressed() {
+    if (Calcul.isEnabled()) {
+        float result = calculer();
+        resultLabel.setText(QString::number(result)); // Affichage du résultat
+        return;
+    }
+
+    bool isVisible = longueur.isVisible();
+
+    if(debit.hasFocus() && !isVisible){
+        vitesse.setFocus();
+        return;
+    } else if (debit.hasFocus() && isVisible){
+        longueur.setFocus();
+        return;
+    }
+
+    if (longueur.hasFocus()) {
+        denivele.setFocus();
+    }
+}
 
 
 
@@ -430,5 +412,21 @@ void MainWindow::focusNextInput() {
 
 }
 
+
+
+void MainWindow::setvitesse(int vitesse){
+    // met le champ en visible
+    V.setVisible(true);
+    std::string str="";
+    // si la vitesse est > 2 on écris on rouge
+    if(vitesse > 2){
+        V.setStyleSheet("color: red;  background-color: white");
+        str = "La vitesse est trop élevé ( " + std::to_string(vitesse) + " m/s)";
+    } else {
+        V.setStyleSheet("");
+        str = "La vitesse sera de " + std::to_string(vitesse) + " m/s";
+    }
+    V.setText(QString::fromStdString(str));
+}
 
 
