@@ -29,24 +29,23 @@ public:
 
 private:
 
-    QComboBox comboBox1;
-    QComboBox comboBox2;
+    QComboBox Materiau;
+    QComboBox Pression;
 
     QLineEdit debit;
     QLineEdit vitesse;
     QLineEdit longueur;
     QLineEdit denivele;
 
-    QHBoxLayout layout;
     QLabel resultLabel;
     QLineEdit readOnlyLine;
     QLineEdit V;
 
-    QPushButton switchButton;
-    QPushButton button;
+    QPushButton Changer;
+    QPushButton Calcul;
 
     ///
-    /// @param index
+    /// @param index : Parametre de la combobox1
     /// Selectionne les parametres en fonction de la premier combobox
     void updateSecondComboBox(int index);
 
@@ -91,12 +90,12 @@ private:
     float calcullongueurdeniv();
 
     ///
-    /// @param diametre
+    /// @param diametre : diametre intérieur nécéssaire renvoyé par le calcul
     /// Renvoie parmis un std::map de tuyau celui qui à le diametre intérieur supérieur le plus proche
     void Gettuyau(float diametre);
 
     ///
-    /// @param event
+    /// @param event : appuie sur une touche quelconque
     /// Permet des raccourcis clavier tel que UP,DOWN, SHIFT + UP,...
     void keyPressEvent(QKeyEvent *event);
 
@@ -111,7 +110,7 @@ private:
     void focusNextInput();
 
     ///
-    /// @param vitesse
+    /// @param vitesse : Vitesse de l'eau calculer
     /// Permet de rendre visible et de remplir le champ vitesse
     void setvitesse(int vitesse);
 };

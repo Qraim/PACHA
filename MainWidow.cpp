@@ -1,11 +1,11 @@
 #include "MainWidow.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", this) {
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), Calcul("Calculer", this) {
     setFixedSize(500, 310);
 
-    comboBox1.setFixedWidth(80);
-    comboBox2.setFixedWidth(80);
+    Materiau.setFixedWidth(80);
+    Pression.setFixedWidth(80);
     debit.setFixedWidth(60);
     vitesse.setFixedWidth(60);
     longueur.setFixedWidth(60);
@@ -13,21 +13,21 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     resultLabel.setFixedWidth(100);
     readOnlyLine.setFixedWidth(400);
     V.setFixedWidth(400);
-    switchButton.setFixedWidth(80);
+    Changer.setFixedWidth(80);
 
 
-    comboBox1.addItem("PEBD");
-    comboBox1.addItem("PEHD");
-    comboBox1.addItem("PVC");
+    Materiau.addItem("PEBD");
+    Materiau.addItem("PEHD");
+    Materiau.addItem("PVC");
 
 
     QGridLayout *gridLayout = new QGridLayout;
 
     // Matériau et Pression
     gridLayout->addWidget(new QLabel("Matériau : "), 0, 0);
-    gridLayout->addWidget(&comboBox1, 0, 1);
+    gridLayout->addWidget(&Materiau, 0, 1);
     gridLayout->addWidget(new QLabel("Pression : "), 1, 0);
-    gridLayout->addWidget(&comboBox2, 1, 1);
+    gridLayout->addWidget(&Pression, 1, 1);
 
     // Débit et Vitesse
     gridLayout->addWidget(new QLabel("Débit : "), 2, 0);
@@ -46,14 +46,14 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     gridLayout->addWidget(new QLabel("mm"), 5, 2);
 
     // Bouton Changer en haut à droite
-    switchButton.setText("Changer");
-    switchButton.setFixedWidth(80);
-    gridLayout->addWidget(&switchButton, 0, 3);
+    Changer.setText("Changer");
+    Changer.setFixedWidth(80);
+    gridLayout->addWidget(&Changer, 0, 3);
 
     // Bouton Calculer au milieu en bas
-    button.setFixedWidth(80);
-    button.setEnabled(false);
-    gridLayout->addWidget(&button, 6, 1);
+    Calcul.setFixedWidth(80);
+    Calcul.setEnabled(false);
+    gridLayout->addWidget(&Calcul, 6, 1);
 
     // Résultat sous le bouton Calculer
     gridLayout->addWidget(new QLabel("Résultat (en mm):"), 7, 0);
@@ -69,18 +69,19 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
 
     setLayout(gridLayout);
 
-    button.setEnabled(false);
+    Calcul.setEnabled(false);
 
     V.setReadOnly(true);
     V.setVisible(false);
 
-    // Set visibility of the new widgets to false initially
+    // Cache les champs servant dans l'autre mode
     longueur.setVisible(false);
     denivele.setVisible(false);
 
-    connect(&comboBox1, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::updateSecondComboBox);
+    // On relis les bouttons/champs aux fonctions
+    connect(&Materiau, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::updateSecondComboBox);
 
-    connect(&button, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
+    connect(&Calcul, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
 
     connect(&debit, &QLineEdit::returnPressed, this, &MainWindow::onReturnPressed);
     connect(&longueur, &QLineEdit::returnPressed, this, &MainWindow::onReturnPressed);
@@ -91,15 +92,17 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), button("Calculer", th
     connect(&vitesse, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
     connect(&longueur, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
     connect(&denivele, &QLineEdit::textChanged, this, &MainWindow::updateButtonState);
-    connect(&switchButton, &QPushButton::clicked, this, &MainWindow::onSwitchButtonClicked);
+    connect(&Changer, &QPushButton::clicked, this, &MainWindow::onSwitchButtonClicked);
 
-    updateSecondComboBox(comboBox1.currentIndex());
+    // on déclenche les fonctions
+    updateSecondComboBox(Materiau.currentIndex());
     updateButtonState();
 }
 
 void MainWindow::onSwitchButtonClicked() {
     bool isVisible = longueur.isVisible();
 
+    // Soit on cache ou non certains bouttons
     vitesse.setVisible(isVisible);
     longueur.setVisible(!isVisible);
     denivele.setVisible(!isVisible);
@@ -110,21 +113,21 @@ void MainWindow::onSwitchButtonClicked() {
 }
 
 void MainWindow::updateSecondComboBox(int index) {
-    comboBox2.clear(); // On efface le contenu pour le remplacer
+    Pression.clear(); // On efface le contenu pour le remplacer
 
     switch (index) {
         case 0: // PEBD
-            comboBox2.addItem("6");
+            Pression.addItem("6");
             break;
         case 1: // PEHD
-            comboBox2.addItem("6");
-            comboBox2.addItem("10");
-            comboBox2.addItem("16");
+            Pression.addItem("6");
+            Pression.addItem("10");
+            Pression.addItem("16");
             break;
         case 2: // PVC
-            comboBox2.addItem("8");
-            comboBox2.addItem("10");
-            comboBox2.addItem("16");
+            Pression.addItem("8");
+            Pression.addItem("10");
+            Pression.addItem("16");
             break;
         default:
             break;
@@ -134,7 +137,7 @@ void MainWindow::updateSecondComboBox(int index) {
 float MainWindow::calculer(){
 
     bool isVisible = longueur.isVisible();
-
+    // lance le calcul en fonction du mode choisi
     if(!isVisible){
         V.setVisible(false);
         return calculdebitvitesse();
@@ -156,8 +159,10 @@ float MainWindow::calcullongueurdeniv(){
     float vitesses = (debits/3600) / ((std::pow((deniveles/2000),2))*M_PI);
     float diametre = k*std::pow(debits,a)*std::pow(deniveles,b)*longueurs;
 
+    // écris le champ vitesse
     setvitesse(vitesses);
 
+    // récupere le bon tuyau
     Gettuyau(diametre);
 
     return roundf(diametre * 100) / 100;
@@ -165,8 +170,10 @@ float MainWindow::calcullongueurdeniv(){
 }
 
 void MainWindow::setvitesse(int vitesse){
+    // met le champ en visible
     V.setVisible(true);
     std::string str="";
+    // si la vitesse est > 2 on écris on rouge
     if(vitesse > 2){
         V.setStyleSheet("color: red;  background-color: white");
         str = "La vitesse est trop élevé ( " + std::to_string(vitesse) + " m/s)";
@@ -191,8 +198,8 @@ float MainWindow::calculdebitvitesse(){
 }
 
 std::map<float, float> MainWindow::gettableau() { // Générateur du tableau en fonction des entrées utilisateur avec ( diametre exterieur, diametre interieur )
-    QString str1 = comboBox1.currentText();
-    QString str2 = comboBox2.currentText();
+    QString str1 = Materiau.currentText();
+    QString str2 = Pression.currentText();
     std::map<float,float> tableau;
     if (str1 == "PEBD") {
         tableau = {
@@ -309,17 +316,17 @@ void MainWindow::updateButtonState() {
     bool longueurHasText = !longueur.text().isEmpty();
     bool deniveleHasText = !denivele.text().isEmpty();
 
-    // Verifier quel mode est actif
+    // Verifier quel mode est actif et suivant les champs rempli, on l'active ou non
     if (debit.isVisible() && vitesse.isVisible()) {
-        button.setEnabled(debitHasText && vitesseHasText);
+        Calcul.setEnabled(debitHasText && vitesseHasText);
     } else {
-        button.setEnabled(longueurHasText && deniveleHasText && debitHasText);
+        Calcul.setEnabled(longueurHasText && deniveleHasText && debitHasText);
     }
 }
 
 
 void MainWindow::onReturnPressed() {
-    if (button.isEnabled()) {
+    if (Calcul.isEnabled()) {
         float result = calculer();
         resultLabel.setText(QString::number(result)); // Affichage du résultat
         return;
@@ -360,7 +367,7 @@ void MainWindow::Gettuyau(float diametre) {
     if(closestDuo.first==0 && closestDuo.second==0){
         str = "Calcul Invalide";
     } else {
-        str = "Il faut un tuyau de " + comboBox1.currentText().toStdString() + " en " + comboBox2.currentText().toStdString() + " bar, de " + std::to_string(closestDuo.first) + "mm";
+        str = "Il faut un tuyau de " + Materiau.currentText().toStdString() + " en " + Pression.currentText().toStdString() + " bar, de " + std::to_string(closestDuo.first) + "mm";
     }
     readOnlyLine.setText(QString::fromStdString(str));
 }
@@ -371,15 +378,16 @@ void MainWindow::Gettuyau(float diametre) {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key_Control) {
-        switchButton.click();
+        Changer.click();
     }
         // Gérer la combinaison de touches Shift + Up && Shift + Down ou U
     else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Up || event->key() == Qt::Key_Up) {
         focusPreviousInput();
     } else if (event->modifiers() & Qt::ShiftModifier && event->key() == Qt::Key_Down || event->key() == Qt::Key_Down) {
         focusNextInput();
+        // gérer l'appuie sur la touche entrée
     } else if (event->modifiers() & Qt::Key_Enter) {
-        if(button.isEnabled()){
+        if(Calcul.isEnabled()){ // Si calcul est actif
             float result = calculer();
             resultLabel.setText(QString::number(result)); // Affichage du résultat
             return;
